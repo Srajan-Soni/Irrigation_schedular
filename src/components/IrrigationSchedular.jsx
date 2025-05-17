@@ -77,7 +77,15 @@ const IrrigationScheduler = () => {
     setCurrentPage(1);
   };
 
- 
+  const handleFilter = () => {
+    const filtered = schedule.filter((item) => {
+      const matchPlot = plotFilter ? item.plot === plotFilter : true;
+      const matchStatus = statusFilter ? item.status === statusFilter : true;
+      return matchPlot && matchStatus;
+    });
+    setFilteredSchedule(filtered);
+    setCurrentPage(1);
+  };
 
  
 
@@ -108,7 +116,34 @@ const IrrigationScheduler = () => {
         </button>
       </div>
 
-      
+      <div className="bg-white text-black p-4 rounded-xl mb-4 flex flex-col sm:flex-row gap-4 shadow-md">
+        <select
+          value={plotFilter}
+          onChange={(e) => setPlotFilter(e.target.value)}
+          className="p-2 border rounded-md"
+        >
+          <option value="">Filter by Plot</option>
+          {Array.from(new Set(schedule.map((s) => s.plot))).map((plot) => (
+            <option key={plot} value={plot}>{plot}</option>
+          ))}
+        </select>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="p-2 border rounded-md"
+        >
+          <option value="">Filter by Status</option>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+        <button
+          onClick={handleFilter}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Apply Filters
+        </button>
+      </div>
 
       <div className="bg-white text-black rounded-xl shadow-xl p-4 overflow-x-auto">
         <table className="min-w-full table-auto text-left">
