@@ -87,7 +87,12 @@ const IrrigationScheduler = () => {
     setCurrentPage(1);
   };
 
- 
+  const paginatedData = filteredSchedule.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredSchedule.length / itemsPerPage);
 
   return (
     <div className="p-4 sm:p-8 w-full bg-gradient-to-b from-sky-400 to-white min-h-screen">
@@ -158,11 +163,48 @@ const IrrigationScheduler = () => {
             </tr>
           </thead>
           <tbody>
-          
+            {paginatedData.map(({ index, plot, startTime, endTime, RunBy, status }) => (
+              <tr key={index} className="border-b hover:bg-gray-100">
+                <td>{index}</td>
+                <td>{plot}</td>
+                <td>{startTime}</td>
+                <td>{endTime}</td>
+                <td>{RunBy}</td>
+                <td>
+                  <span
+                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      status === 'Pending'
+                        ? 'bg-blue-100 text-blue-800'
+                        : status === 'In Progress'
+                        ? 'bg-orange-100 text-orange-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {status}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
-       
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4 space-x-2">
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 rounded-md ${
+                  currentPage === i + 1
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
